@@ -11,7 +11,7 @@ const productSchema=mongoose.Schema({
 	description:{
 		required:true,
 		type:String,
-		maxlength:100000
+		maxlength:100000 
 	},
 	price:{
 		required:true,
