@@ -13,12 +13,14 @@ require('dotenv').config();
 
 //mongoose connection
 mongoose.Promise=global.Promise;
-mongoose.connect(process.env.DATABASE);
+mongoose.connect(process.env.MONGODB_URI);
   
 //middleware
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());//so whenever we get a request,we'll be able to read it.
 app.use(cookieParser());
+
+app.use(express.static('client/build'));
 
 //cloudinary for img upload
 cloudinary.config({
@@ -504,6 +506,17 @@ app.post('/api/site/site_data',auth,admin,(req,res)=>{
         }
     )
 })
+//************************************
+//          DEFAULT (Heroku)
+//************************************
+if(process.env.NODE_ENV === 'production'){
+    const path = require('path');
+    app.get('/*',(req,res)=>{
+        res.sendfile(path.resolve(__dirname,'../client','build','index.html'))
+
+    })
+}
+
 const port=process.env.PORT||3002;
 app.listen(port,()=>{
 	console.log(`Server is running on port ${port}`)
